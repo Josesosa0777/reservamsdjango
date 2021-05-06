@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from people_app.models import PeopleList
 from people_app.forms import PeopleForm
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 
 def people(request):
@@ -14,7 +15,10 @@ def people(request):
         messages.success(request, ("New Person Added!"))
         return redirect('peoplelist')
     else:
-        all_people = PeopleList.objects.all
+        all_people = PeopleList.objects.all()
+        paginator = Paginator(all_people, 5)  # number of items per page
+        page = request.GET.get('pg')
+        all_people = paginator.get_page(page)
         return render(request, 'peoplelist.html', {'all_people': all_people})
 
 
