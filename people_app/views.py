@@ -53,3 +53,10 @@ def edit_people(request, people_id):
     else:
         people_obj = PeopleList.objects.get(pk=people_id)
         return render(request, 'edit.html', {'people_obj': people_obj})
+
+
+def index(request):
+    context = {
+        'index_text': 'Welcome Index Page',
+    }
+    return render(request, 'index.html', context)

@@ -3,7 +3,7 @@
   <title> People </title>
 {% endblock title%}
 {%block content %}
-    <div class='container'>
+  <div class='container'>
     </br>
     {% if messages %}
         {% for message in messages %}
@@ -74,8 +74,8 @@
           <td>{{obj.email}}</td>
           <td>{{obj.area}}</td>
           <td>{{obj.leader}}</td>
-          <td><a href="{% url 'edit_people' obj.id %}">Edit</a></td>
-          <td><a href="{% url 'delete_people' obj.id %}" >Delete</a></td>
+          <td><a href="{% url 'edit_people' obj.id %}"><button type="button" class="btn btn-primary">Edit</button></a></td>
+          <td><a href="{% url 'delete_people' obj.id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -97,5 +97,5 @@
       </ul>
     </nav>
 
-    </div>
+  </div>
 {% endblock content%}
