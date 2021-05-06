@@ -5,6 +5,13 @@ from people_app.forms import PeopleForm
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from static.data.people_dictionary import people as show_people
+from static.data.operation_data import question_operation
+from static.data.strategist_data import question_strategist
+from static.data.management_data import question_management
+from static.data.operation_data_engineer import question_operation_engineer
+from static.data.strategist_data_engineer import question_strategist_engineer
+from static.data.management_data_engineer import question_management_engineer
 
 
 @login_required
