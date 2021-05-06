@@ -4,8 +4,10 @@ from people_app.models import PeopleList
 from people_app.forms import PeopleForm
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def people(request):
     # {} if I need to send any content
     if request.method == "POST":
@@ -36,12 +38,14 @@ def about(request):
     return render(request, 'about.html', context)
 
 
+@login_required
 def delete_people(request, people_id):
     people = PeopleList.objects.get(pk=people_id)  # pk is for primary key
     people.delete()
     return redirect('peoplelist')
 
 
+@login_required
 def edit_people(request, people_id):
     if request.method == "POST":
         people = PeopleList.objects.get(pk=people_id)
