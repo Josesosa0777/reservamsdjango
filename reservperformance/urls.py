@@ -5,8 +5,11 @@ from accounts import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('register/', views.register, name='register'),
-    path('accounts/', include('django.contrib.auth.urls')),
+
+    path('account/', include('accounts.urls')),
+
+    # path('register/', views.register, name='register'),
+    # path('account/', include('django.contrib.auth.urls')),
     path('', people_views.index, name='index'),
     path('peoplelist/', include('people_app.urls')),
     path('contact', people_views.contact, name='contact'),
