@@ -9,4 +9,5 @@ urlpatterns = [
     path('peoplelist/', include('people_app.urls')),
     path('contact', people_views.contact, name='contact'),
     path('about-us', people_views.about, name='about'),
+    path('account/', include('users_app.urls')),
 ]
