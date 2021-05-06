@@ -130,3 +130,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'  # the version that I have
+
+LOGIN_REDIRECT_URL = 'peoplelist'
+LOGIN_URL = 'login'
