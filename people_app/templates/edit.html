@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{%block title %}
+  <title>Edit People</title>
+{% endblock title%}
+
+{% block content%}
+  <div class='container'>
+    </br>
+    <form method="POST" class='row'>
+      {% csrf_token %}  {% comment %} to make secure {% endcomment %}
+        <div class='container'>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='name' placeholder="{{people_obj.name}}" value="{{people_obj.name}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Category</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='category' placeholder="category" value="{{people_obj.category}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Email</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control form-control-sm" name='email' placeholder="email" value="{{people_obj.email}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Area</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='area' placeholder="Area" value="{{people_obj.area}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Leader Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='leader' placeholder="full name of the leader" value="{{people_obj.leader}}">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4 container">
+            <button type="submit" class="form-control btn btn-primary text-center">Update person</button>
+        </div>
+    </form>
+  </div>
+{% endblock content %}

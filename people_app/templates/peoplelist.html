@@ -3,7 +3,82 @@
   <title> People </title>
 {% endblock title%}
 {%block content %}
-    <div>
-        <h1> Welcome to People page! </h1>  
+    <div class='container'>
+    </br>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>  
+            </div>
+        {% endfor %}
+    {% endif %}
+    <form method="POST" class='row'>
+      {% csrf_token %}  {% comment %} to make secure {% endcomment %}
+        <div class='container'>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='name' placeholder="full name">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Category</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='category' placeholder="category">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Email</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control form-control-sm" name='email' placeholder="email">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Area</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='area' placeholder="Area">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-sm">Leader Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control form-control-sm" name='leader' placeholder="full name of the leader">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4 container">
+            <button type="submit" class="form-control btn btn-primary text-center">Add person</button>
+        </div>
+    </form>
+    </br>
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Email</th>
+          <th scope="col">Area</th>
+          <th scope="col">Leader</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for obj in all_people %}
+        <tr>
+          <td>{{obj.name}}</td>
+          <td>{{obj.category}}</td>
+          <td>{{obj.email}}</td>
+          <td>{{obj.area}}</td>
+          <td>{{obj.leader}}</td>
+          <td><a href="{% url 'edit_people' obj.id %}">Edit</a></td>
+          <td><a href="{% url 'delete_people' obj.id %}" >Delete</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
     </div>
 {% endblock content%}

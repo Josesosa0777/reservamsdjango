@@ -19,5 +19,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     # redirect to my particular app
-    path('peoplelist/', include('people_app.urls'))
+    path('peoplelist/', include('people_app.urls')),
+
 ]
