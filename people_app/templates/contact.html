@@ -6,139 +6,22 @@
     {% comment %} <div class='container'>
         <h1> {{contact_text}} </h1>   
     </div> {% endcomment %}
-    <div class="container">
-      <h3 class="questions-title">Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
+    <div class="container mt-5">     {% comment %} {{ user.email }} {% endcomment %}
+      <h3 class="questions-title">Hola {{name_evaluator}}. Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
         performance del equipo de Reservamos. </h3>
-      <form>
-        <div class="form-group">
-          <label for="exampleFormControlSelect1">Choose a person to start the evaluation</label>
-          <select class="form-control" id="exampleFormControlSelect1">
-            {% for people in list_people %}
-            <option>{{people}}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </form>
-      {% comment %} <form action="{{url_for('submitted')}}" method="POST">
-        <fieldset>
-          {% if area == "engineer" %}
-          {% if category == "Operation" %}
-          {% for question in questions_operation_engineer %}
-          {% include "questions_template.html" %}
-          {% endfor %}
-          <br>
-          {% endif %}
-
-          {% if category == "Strategist" %}
-          {% for question in questions_strategist_engineer %}
-          {% include "questions_template.html" %}
-          {% endfor %}
-          <br>
-          {% endif %}
-
-          {% if category == "Direction" %}
-          {% for question in questions_management_engineer %}
-          {% include "questions_template.html" %}
-          {% endfor %}
-          <br>
-          {% endif %}
-
-          {% if name_evaluator == leader_person %}
-          <div class="evaluation_by_cycles">
-            <h3>Evaluación por Ciclos</h3>
-            <p> Si eres líder de equipo ingresa la evaluación de cada ciclo hasta la fecha de la persona evaluada.
-              Si el ciclo no ha sido evaluado deja Vacío el espacio.
-            </p>
-            <table>
-              <tr>
-                <td><label for="C1">C1:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C1" name="C1" placeholder="--">%
-                </td>
-                <td><label for="C2">C2:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C2" name="C2" placeholder="--">%
-                </td>
-                <td><label for="C3">C3:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C3" name="C3" placeholder="--">%
-                </td>
-                <td><label for="C4">C4:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C4" name="C4" placeholder="--">%
-                </td>
-              </tr>
-              <tr>
-                <td><label for="C5">C5:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C5" name="C5" placeholder="--">%
-                </td>
-                <td><label for="C6">C6:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C6" name="C6" placeholder="--">%<br>
-                </td>
-                <td><label for="C7">C7:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C7" name="C7" placeholder="--">%
-                </td>
-                <td><label for="C8">C8:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="C8" name="C8" placeholder="--">%
-                </td>
-              </tr>
-            </table>
-          </div>
-          {% endif %}
-
-          {% elif area != "engineer" %}
-
-          {% if category == "Operation" %}
-          {% for question in questions_operation %}
-          {% include "questions_template.html" %}
-          {% endfor %}
-          <br>
-          {% endif %}
-
-          {% if category == "Strategist" %}
-          {% for question in questions_strategist %}
-          {% include "questions_template.html" %}
-          {% endfor %}
-          <br>
-          {% endif %}
-
-          {% if category == "Direction" %}
-          {% for question in questions_management %}
-          {% include "questions_template.html" %}
-          {% endfor %}
-          <br>
-          {% endif %}
-
-          {% if name_evaluator == leader_person %}
-          <div class="evaluation_by_Q">
-            <h3>Evaluación por Q's</h3>
-            <p> Si eres líder de equipo ingresa la evaluación de cada Q hasta la fecha de la persona evaluada.
-              Si el Q no ha sido evaluado deja Vacío el espacio.
-            </p>
-            <table>
-              <tr>
-                <td><label for="Q1">Q1:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="Q1" name="Q1" placeholder="">%
-                </td>
-                <td><label for="Q2">Q2:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="Q2" name="Q2" placeholder="">%
-                </td>
-                <td><label for="Q3">Q3:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="Q3" name="Q3" placeholder="">%
-                </td>
-                <td><label for="Q4">Q4:</label>
-                  <input class="evaluation-percentage" type="number" step="any" id="Q4" name="Q4" placeholder="">%
-                </td>
-              </tr>
-            </table>
-          </div>
-          {% endif %}
-          {% endif %}
-          <div class="send-evaluation">
-            <button type="submit" class="btn-lg btn-warning" id="send">Send</button>
-          </div>
-          <div id="name-person">
-            <p> The evaluated person is: </p>
-            <input name="name_person" value="{{name_evaluated}}" selected>
-          </div>
-        </fieldset>
-      </form> {% endcomment %}
+      <div class='container d-flex justify-content-center text-center'>
+        <form action="{% url 'evaluation' %}" method="POST" class="form-signin mt-3 col-6 register-login-input">{% csrf_token %}
+          <fieldset>
+            <legend>Choose a person to start the evaluation</legend>
+              <select name="name_person" id="name-select" onchange="javascript:this.form.submit()" required>
+                <option value=""> -- Please choose an option -- </option>
+                {% for people in list_people %}
+                <option value="{{ people.name }}">{{ people.name }}</option>
+                {% endfor %}
+              </select>
+          </fieldset>
+        </form>
+      </div>
       <br>
     </div>
 {% endblock content%}

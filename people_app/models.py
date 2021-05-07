@@ -11,4 +11,4 @@ class PeopleList(models.Model):
     leader = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name + " / " + str(self.category) + " / " + str(self.email) + " / " + str(self.area)
+        return self.name + "/" + str(self.category) + "/" + str(self.email) + "/" + str(self.area) + "/" + str(self.leader)

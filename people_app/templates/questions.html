@@ -1,0 +1,24 @@
+{% if question.id == 1 or question.id|add:"2"|divisibleby:3 %}
+    <br>
+    <h3 class="title-category" style="color: #ef4f4f; font-weight: bold"> {{question.category}} </h3>
+{% endif %}
+<h4 class="questions">{{question.id}}.- {{ question.question }}</h4>
+<div class="mb-2 d-flex justify-content-around flex-wrap">
+
+    <table>
+        <tr class="row justify-content-between">
+            <td class="col-2 text-center">Totalmente en Desacuerdo</td>
+            <td class="col-2 text-center">En desacuerdo</td>
+            <td class="col-2 text-center">Neutro</td>
+            <td class="col-2 text-center">De acuerdo</td>
+            <td class="col-2 text-center">Totalmente de acuerdo</td>
+        </tr>
+        <tr class="row justify-content-between">
+            <td class="col-2 text-center"><input type="radio" name="a{{question.id}}" value="0" required></td>
+            <td class="col-2 text-center"><input type="radio" name="a{{question.id}}" value="1" required></td>
+            <td class="col-2 text-center"><input type="radio" name="a{{question.id}}" value="2" required></td>
+            <td class="col-2 text-center"><input type="radio" name="a{{question.id}}" value="3" required></td>
+            <td class="col-2 text-center"><input type="radio" name="a{{question.id}}" value="4" required></td>
+        </tr>
+    </table>
+</div>
