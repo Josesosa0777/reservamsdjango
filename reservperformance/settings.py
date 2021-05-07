@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'people_app',
     'accounts',
     'crispy_forms',
+    'evaluation_app',
 ]
 
 MIDDLEWARE = [

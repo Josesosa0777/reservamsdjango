@@ -14,6 +14,7 @@ from static.data.strategist_data_engineer import question_strategist_engineer
 from static.data.management_data_engineer import question_management_engineer
 from datetime import datetime, timezone
 import pytz
+from evaluation_app.models import AnswerList
 # from django.views.decorators.csrf import csrf_exempt
 
 
@@ -21,7 +22,11 @@ import pytz
 def people(request):
     # {} if I need to send any content
     if request.method == "POST":
+        print("POST formulario: ")
+        print(request.POST)
+        print("Esto ES")
         form = PeopleForm(request.POST or None)
+        print(form)
         if form.is_valid():
             form.save()
         messages.success(request, ("New Person Added!"))
@@ -86,14 +91,14 @@ def contact(request):
                 quest = questions[q_]["category"]
                 categories.append(quest)
         if area_person == "not_engineer":
-            c1 = None
-            c2 = None
-            c3 = None
-            c4 = None
-            c5 = None
-            c6 = None
-            c7 = None
-            c8 = None
+            c1 = 0
+            c2 = 0
+            c3 = 0
+            c4 = 0
+            c5 = 0
+            c6 = 0
+            c7 = 0
+            c8 = 0
             # answer of the questions ans can be (0 -> 4)  añadi al final persona evaluada cómo afecta?
             print(person_Leader+" lead")
             if evaluator_name == person_Leader:
@@ -107,27 +112,27 @@ def contact(request):
                 q3 = form['Q3']
                 q4 = form['Q4']
                 if form['Q1'] == "":
-                    q1 = None
+                    q1 = 0
                 if form['Q2'] == "":
-                    q2 = None
+                    q2 = 0
                 if form['Q3'] == "":
-                    q3 = None
+                    q3 = 0
                 if form['Q4'] == "":
-                    q4 = None
+                    q4 = 0
             if evaluator_name != person_Leader:
                 for index in range(1, len(form)-1):
                     ind = "a"+str(index)
                     values.append(int(form[ind]))
                     print(values)
-                q1 = None
-                q2 = None
-                q3 = None
-                q4 = None
+                q1 = 0
+                q2 = 0
+                q3 = 0
+                q4 = 0
         if area_person == "engineer":
-            q1 = None
-            q2 = None
-            q3 = None
-            q4 = None
+            q1 = 0
+            q2 = 0
+            q3 = 0
+            q4 = 0
             if evaluator_name == person_Leader:
                 for index in range(1, len(form)-9):
                     ind = "a"+str(index)
@@ -142,38 +147,49 @@ def contact(request):
                 c7 = form['C7']
                 c8 = form['C8']
                 if form['C1'] == "":
-                    c1 = None
+                    c1 = 0
                 if form['C2'] == "":
-                    c2 = None
+                    c2 = 0
                 if form['C3'] == "":
-                    c3 = None
+                    c3 = 0
                 if form['C4'] == "":
-                    c4 = None
+                    c4 = 0
                 if form['C5'] == "":
-                    c5 = None
+                    c5 = 0
                 if form['C6'] == "":
-                    c6 = None
+                    c6 = 0
                 if form['C7'] == "":
-                    c7 = None
+                    c7 = 0
                 if form['C8'] == "":
-                    c8 = None
+                    c8 = 0
             if evaluator_name != person_Leader:
                 for index in range(1, len(form)-1):
                     ind = "a" + str(index)
                     values.append(int(form[ind]))
-                c1 = None
-                c2 = None
-                c3 = None
-                c4 = None
-                c5 = None
-                c6 = None
-                c7 = None
-                c8 = None
+                c1 = 0
+                c2 = 0
+                c3 = 0
+                c4 = 0
+                c5 = 0
+                c6 = 0
+                c7 = 0
+                c8 = 0
         print(values)
         tz = pytz.timezone('America/Monterrey')
         monterrey_now = datetime.now(tz)
         print(monterrey_now)
         print(tz)
+        new_answers = AnswerList.objects.create(
+            evaluator=evaluator_name,
+            evaluated_person=person_evaluated,
+            email_evaluator=current_user,
+            answers=str(values),
+            Q1=q1, Q2=q2, Q3=q3, Q4=q4,
+            C1=c1, C2=c2, C3=c3, C4=c4, C5=c5, C6=c6, C7=c7, C8=c8,
+            category_answer=str(categories),
+            answer_date=monterrey_now,
+            leader=person_Leader
+        )
 
     # Get current user:
     current_user = str(request.user)

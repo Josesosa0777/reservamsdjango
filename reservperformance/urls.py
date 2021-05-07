@@ -13,5 +13,5 @@ urlpatterns = [
     path('contact', people_views.contact, name='contact'),
     path('about-us', people_views.about, name='about'),
     # path('evaluation', people_views.evaluation, name='evaluation'),
-
+    path('', include('evaluation_app.urls'))
 ]
