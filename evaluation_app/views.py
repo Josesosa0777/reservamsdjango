@@ -11,15 +11,17 @@ monterrey_now = datetime.now(tz)
 
 
 def evaluation(request):
-    answer_instance = AnswerList.objects.create(
-        evaluator='test',
-        evaluated_person='Jhon',
-        email_evaluator="",
-        answers="",
-        Q1=0, Q2=0, Q3=0, Q4=0,
-        C1=0, C2=0, C3=0, C4=0, C5=0, C6=0, C7=0, C8=0,
-        category_answer="",
-        answer_date=monterrey_now,
-        leader="")
-
-    return render(request, 'evaluation_form.html', {})
+    # answer_instance = AnswerList.objects.create(
+    #     evaluator='test',
+    #     evaluated_person='Jhon',
+    #     email_evaluator="",
+    #     answers="",
+    #     Q1=0, Q2=0, Q3=0, Q4=0,
+    #     C1=0, C2=0, C3=0, C4=0, C5=0, C6=0, C7=0, C8=0,
+    #     category_answer="",
+    #     answer_date=monterrey_now,
+    #     leader="")
+    context = {
+        'index_text': 'Welcome Index Page',
+    }
+    return render(request, 'evaluation_form.html', context)

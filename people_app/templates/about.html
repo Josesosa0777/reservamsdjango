@@ -5,8 +5,47 @@
 {% endblock title%}
 
 {%block content %}
-    <div class='container'>
-      <h1>  {{about_text}}  </h1>  
+    <div class='container table-responsive mt-3'>
+    </br>
+      <table class="table table-bordered table-hover ">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Evaluator</th>
+            <th scope="col">Evaluated person</th>
+            <th scope="col">Email Evaluator</th>
+            <th scope="col">Answer Date</th>
+            <th scope="col">Leader</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for obj in all_answer %}
+          <tr>
+            <td>{{obj.evaluator}}</td>
+            <td>{{obj.evaluated_person}}</td>
+            <td>{{obj.email_evaluator}}</td>
+            <td>{{obj.answer_date}}</td>
+            <td>{{obj.leader}}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     </div>
+
+    <nav aria-label="Page navigation">
+      {% comment %} <ul class="pagination justify-content-end"> {% endcomment %}
+      <ul class="pagination justify-content-center  mt-5">
+          <li class="page-item"> <a class="page-link" href="?pg=1"><<</a></li>
+          {% if all_answer.has_previous %}
+              <li class="page-item"><a class="page-link" href="?pg={{ all_answer.previous_page_number }}">{{ all_answer.previous_page_number }}</a></li>
+          {% endif %}
+
+          <li class="page-item active"><a class="page-link" href="?pg={{ all_answer.number }}">{{ all_answer.number }}</a></li>
+          
+          {% if all_answer.has_next %}
+              <li class="page-item"><a class="page-link" href="?pg={{ all_answer.next_page_number }}">{{ all_answer.next_page_number }}</a></li>
+          {% endif %}
+          <li class="page-item"><a class="page-link" href="?pg={{ all_answer.paginator.num_pages }}">>></a></li>
+      </ul>
+    </nav>
 {% endblock content%}
 
