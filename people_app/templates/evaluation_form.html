@@ -6,16 +6,15 @@
 
 {%block content %}
   <div class="container mt-5">
-
     <div class="">
-      <h3 class="main-title-report">Reporte Individual - {{person}}</h3><br>
+      <h3 class="">Reporte Individual - {{person}}</h3><br>
       <h2>Criterios de Evaluación Reservamos</h2> <br>
       <p>El Performance Review está dividido en dos áreas claves que en total suman un 100%.</p>
       <h3>Performance Review:</h3>
     </div>
 
-    <div class="classification-performance">
-      <table>
+    <div class="table-responsive mt-3">
+      <table class="table table-bordered table-hover">
           <thead>
           <tr>
               <td>Competencias:</td>
@@ -38,11 +37,11 @@
           <p class="green"> Green: 81 - 100 %</p>
           <p class="blue"> Blue: Mayor a 100 % </p>
       </div>
-      <h4>Ponderación de resultados, competencias y OKRs</h4>
     </div>
 
-    <div class="center-results">
-      <table>
+    <div class="table-responsive mt-3 ">
+      <h4>Ponderación de resultados, competencias y OKRs</h4>
+      <table class="table table-bordered table-hover">
           <thead>
               <tr>
                   <th class=".col-results">Resultado de OKRs</th>
