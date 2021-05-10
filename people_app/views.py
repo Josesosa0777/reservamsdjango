@@ -15,6 +15,7 @@ from static.data.management_data_engineer import question_management_engineer
 from datetime import datetime, timezone
 import pytz
 from evaluation_app.models import AnswerList
+import numpy as np
 # from django.views.decorators.csrf import csrf_exempt
 
 
@@ -212,11 +213,133 @@ def contact(request):
 
 
 def evaluated_people(request):
-    if request.method == "POST":
-        messages.success(request, ("Person Edited!"))
-        return redirect('about')
     current_user = str(request.user)
     all_answer = AnswerList.objects.all()
+    if request.method == "POST":
+        form = request.POST
+        chosen_person = form['person_id']
+        stored_answers = []  # answers of team evaluation
+        self_stored_answers = []  # answers of autoevaluation
+        mean_okr = ''
+        # evalua cuando los resultados de cuando la persona aparece en la db
+        for person in all_answer:
+            if chosen_person == person.evaluated_person and person.evaluator == chosen_person:
+                self_ans = person.answers
+                self_ans = self_ans.replace(' ', '')
+                self_ans = self_ans.replace("'", "")
+                self_ans = self_ans.replace("[", "")
+                self_ans = self_ans.replace("]", "")
+                # convert the string to an array
+                self_ans = self_ans.split(",")
+                # array of number for answer:
+                # convert to an array of numbers
+                self_ans_array = [int(numeric) for numeric in self_ans]
+                # conversion of answer to percentage:
+                self_ans_conversion = []
+                for n in range(0, len(self_ans_array)):
+                    self_ans_ = self_ans_array[n]
+                    if self_ans_ == 1:
+                        self_ans_ = 25
+                    elif self_ans_ == 2:
+                        self_ans_ = 50
+                    elif self_ans_ == 3:
+                        self_ans_ = 75
+                    elif self_ans_ == 4:
+                        self_ans_ = 100
+                    self_ans_conversion.append(self_ans_)
+                self_stored_answers.append(self_ans_conversion)
+            print(("MY AUTOEVALUATION"))
+            print(self_stored_answers)
+            print("END AUTOEVALUATION")
+            if chosen_person == person.evaluated_person and person.evaluator != chosen_person:
+                val_okrs = []
+                val_okrs.append(person.Q1)
+                val_okrs.append(person.Q2)
+                val_okrs.append(person.Q3)
+                val_okrs.append(person.Q4)
+                val_okrs.append(person.C1)
+                val_okrs.append(person.C2)
+                val_okrs.append(person.C3)
+                val_okrs.append(person.C4)
+                val_okrs.append(person.C5)
+                val_okrs.append(person.C6)
+                val_okrs.append(person.C7)
+                val_okrs.append(person.C8)
+                print("OKRS START")
+                print(val_okrs)
+                result_mean_okrs = np.average(
+                    [x for x in val_okrs if x != 0])
+                if result_mean_okrs > 0:
+                    mean_okr = result_mean_okrs
+                print("OKRS END")
+                ans = person.answers
+                ans = ans.replace(' ', '')
+                ans = ans.replace("'", "")
+                ans = ans.replace("[", "")
+                ans = ans.replace("]", "")
+                ans = ans.split(",")  # convert the string to an array
+                # array of number for answer:
+                # convert to an array of numbers
+                ans_array = [int(numeric_string) for numeric_string in ans]
+                # conversion of answer to percentage:
+                ans_conversion = []
+                print("ANS ARRAY")
+                print(ans_array)
+                for n_ans in range(0, len(ans_array)):
+                    ans_ = ans_array[n_ans]
+                    if ans_ == 1:
+                        ans_ = 25
+                    elif ans_ == 2:
+                        ans_ = 50
+                    elif ans_ == 3:
+                        ans_ = 75
+                    elif ans_ == 4:
+                        ans_ = 100
+                    ans_conversion.append(ans_)
+                stored_answers.append(ans_conversion)
+                print("STORED")
+                print(stored_answers)
+                category = person.category_answer.split(",")
+                category = [s.replace("[", "") for s in category]
+                category = [s.replace("]", "") for s in category]
+                category = [s.replace("'", "") for s in category]
+                print(category)
+        # average of array: https://stackoverflow.com/questions/2153444/python-finding-average-of-a-nested-list/2157646
+        answers_mean = np.mean(stored_answers, axis=0)
+        self_answers_mean = np.mean(self_stored_answers, axis=0)
+        # cada 3 respuestas me debe dar una gráfica, entonces hay que promediar cada 3 respuestas:
+        print(answers_mean)
+        x_ans = []
+        for i in range(0, len(answers_mean)):
+            if (i+1) % 3 == 0:
+                elem_mean = np.mean(answers_mean[i-2:i+1])
+                # almacena promed. cada 3 elements (el num de preguntas deben ser múltiplo de 3)
+                x_ans.append(elem_mean)
+        x_ans = np.round(x_ans, decimals=2)
+        print(x_ans)
+        # remove the space before and after each element of the category
+        for elem in range(0, len(category)):
+            category[elem] = category[elem].strip()
+        y_ans = category
+        print(y_ans)
+        # Resultados:
+        result_okr = np.round(mean_okr*0.7, decimals=2)
+        self_evaluation = np.round(np.mean(self_answers_mean*0.3), decimals=2)
+        print(self_evaluation)
+        # Evaluación del team Competencias
+        team_evaluation = np.round(np.mean(x_ans*0.3), decimals=2)
+        total_evaluation = team_evaluation + result_okr
+        print("RESULT OKR ")
+        print(result_okr)
+        print(team_evaluation)
+
+        return render(request, 'evaluation_form.html', {'person': chosen_person, 'options': all_answer,
+                                                        'x_values': x_ans, 'y_values': y_ans, 'team_evaluation': team_evaluation,
+                                                        'result_okr': result_okr, 'self_evaluation': self_evaluation, 'total_evaluation': total_evaluation,
+                                                        'user': current_user})
+
+    # current_user = str(request.user)
+    # all_answer = AnswerList.objects.all()
     names = []
     for name in all_answer:
         names.append(name.evaluated_person)
