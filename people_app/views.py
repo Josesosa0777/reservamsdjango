@@ -218,6 +218,9 @@ def evaluated_people(request):
         stored_answers = []  # answers of team evaluation
         self_stored_answers = []  # answers of autoevaluation
         mean_okr = ''
+        team_evaluation = []
+        result_okr = []
+        x_ans = []
         # evalua cuando los resultados de cuando la persona aparece en la db
         for person in all_answer:
             if chosen_person == person.evaluated_person and person.evaluator == chosen_person:
@@ -245,9 +248,10 @@ def evaluated_people(request):
                         self_ans_ = 100
                     self_ans_conversion.append(self_ans_)
                 self_stored_answers.append(self_ans_conversion)
-            print(("MY AUTOEVALUATION"))
-            print(self_stored_answers)
-            print("END AUTOEVALUATION")
+                category = person.category_answer.split(",")
+                category = [s.replace("[", "") for s in category]
+                category = [s.replace("]", "") for s in category]
+                category = [s.replace("'", "") for s in category]
             if chosen_person == person.evaluated_person and person.evaluator != chosen_person:
                 val_okrs = []
                 val_okrs.append(person.Q1)
@@ -280,8 +284,6 @@ def evaluated_people(request):
                 ans_array = [int(numeric_string) for numeric_string in ans]
                 # conversion of answer to percentage:
                 ans_conversion = []
-                print("ANS ARRAY")
-                print(ans_array)
                 for n_ans in range(0, len(ans_array)):
                     ans_ = ans_array[n_ans]
                     if ans_ == 1:
@@ -294,49 +296,53 @@ def evaluated_people(request):
                         ans_ = 100
                     ans_conversion.append(ans_)
                 stored_answers.append(ans_conversion)
-                print("STORED")
-                print(stored_answers)
+
                 category = person.category_answer.split(",")
                 category = [s.replace("[", "") for s in category]
                 category = [s.replace("]", "") for s in category]
                 category = [s.replace("'", "") for s in category]
                 print(category)
         # average of array: https://stackoverflow.com/questions/2153444/python-finding-average-of-a-nested-list/2157646
-        answers_mean = np.mean(stored_answers, axis=0)
-        self_answers_mean = np.mean(self_stored_answers, axis=0)
-        # cada 3 respuestas me debe dar una gráfica, entonces hay que promediar cada 3 respuestas:
-        print(answers_mean)
-        x_ans = []
-        self_x_ans = []
-        for i in range(0, len(answers_mean)):
-            if (i+1) % 3 == 0:
-                elem_mean = np.mean(answers_mean[i-2:i+1])
-                self_elem_mean = np.mean(self_answers_mean[i-2:i+1])
-                # almacena promed. cada 3 elements (el num de preguntas deben ser múltiplo de 3)
-                x_ans.append(elem_mean)
-                self_x_ans.append(self_elem_mean)
-        x_ans = np.round(x_ans, decimals=2)
-        self_x_ans = np.round(self_x_ans, decimals=2)
-        print(x_ans)
-        print("THE SELF ANS")
-        print(self_x_ans)
+        if stored_answers:
+            answers_mean = np.mean(stored_answers, axis=0)
+            # cada 3 respuestas me debe dar una gráfica, entonces hay que promediar cada 3 respuestas:
+            x_ans = []
+            for i in range(0, len(answers_mean)):
+                if (i+1) % 3 == 0:
+                    elem_mean = np.mean(answers_mean[i-2:i+1])
+                    # almacena promed. cada 3 elements (el num de preguntas deben ser múltiplo de 3)
+                    x_ans.append(elem_mean)
+            x_ans = np.round(x_ans, decimals=2)
+            # Evaluación del team Competencias
+            team_evaluation = np.round(np.mean(x_ans*0.3), decimals=2)
+
+        if self_stored_answers:
+            self_answers_mean = np.mean(self_stored_answers, axis=0)
+            self_x_ans = []
+            for i in range(0, len(self_answers_mean)):
+                if (i+1) % 3 == 0:
+                    self_elem_mean = np.mean(self_answers_mean[i-2:i+1])
+                    # almacena promed. cada 3 elements (el num de preguntas deben ser múltiplo de 3)
+                    self_x_ans.append(self_elem_mean)
+            self_x_ans = np.round(self_x_ans, decimals=2)
+            # Resultados
+            self_evaluation = np.round(
+                np.mean(self_answers_mean*0.3), decimals=2)
+
         # remove the space before and after each element of the category
         for elem in range(0, len(category)):
             category[elem] = category[elem].strip()
         y_ans = category
-        print(y_ans)
-        # Resultados:
-        self_evaluation = np.round(np.mean(self_answers_mean*0.3), decimals=2)
-        print(self_evaluation)
-        # Evaluación del team Competencias
-        team_evaluation = np.round(np.mean(x_ans*0.3), decimals=2)
-        if mean_okr:
+
+        if mean_okr and team_evaluation:
             result_okr = np.round(mean_okr*0.7, decimals=2)
             total_evaluation = np.round(
                 (team_evaluation + result_okr), decimals=2)
-        else:
+        elif not mean_okr and team_evaluation:
             result_okr = '-- '
             total_evaluation = team_evaluation
+        else:
+            total_evaluation = '--'
         # ---------
 
         print("RESULT OKR ")
