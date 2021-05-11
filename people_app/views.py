@@ -339,7 +339,7 @@ def evaluated_people(request):
         return render(request, 'results.html', {'person': chosen_person, 'options': all_answer, 'self_x_values': self_x_ans,
                                                 'x_values': x_ans, 'y_values': y_ans, 'team_evaluation': team_evaluation,
                                                 'result_okr': result_okr, 'self_evaluation': self_evaluation, 'total_evaluation': total_evaluation,
-                                                'user': current_user})
+                                                'actual_user': current_user})
     # current_user = str(request.user)
     # all_answer = AnswerList.objects.all()
     names = []
@@ -350,7 +350,7 @@ def evaluated_people(request):
     paginator = Paginator(my_name_list, 10)  # number of items per page
     page = request.GET.get('pg')
     my_name_list = paginator.get_page(page)
-    return render(request, 'evaluated_people.html', {'user': current_user, 'options': my_name_list})
+    return render(request, 'evaluated_people.html', {'actual_user': current_user, 'options': my_name_list})
 
 
 @login_required

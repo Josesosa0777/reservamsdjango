@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {%block title %}
   <title>Welcome</title>
 {% endblock title%}
@@ -10,7 +11,7 @@
         <center><p class="h1 text-primary">Welcome to the Performance Evaluation of Reservamos!</p></center>
         {% comment %} <center><p class="h2 mt-3">"Start"</p></center>
         <center><p class="h5">Start.</p></center> {% endcomment %}
-
+        <img src="{% static 'images/performance.jpg' %}" class="img-fluid mx-auto d-block" alt="Performance">
         <center><a href="{% url 'start_evaluation' %}"><button type="button" class="btn btn-primary btn-lg mt-3 shadow">Let's Get Started</button></a></center>
       </div>
     </div>
