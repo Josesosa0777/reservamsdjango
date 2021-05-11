@@ -6,6 +6,8 @@
 {% block content%}
   <div class='container'>
     </br>
+    {% comment %} if task.manage == request.user: {% endcomment %}
+    {% if people_obj.manage == request.user %}
     <form method="POST" class='row'>
       {% csrf_token %}  {% comment %} to make secure {% endcomment %}
         <div class='container'>
@@ -44,5 +46,8 @@
             <button type="submit" class="form-control btn btn-primary text-center">Update person</button>
         </div>
     </form>
+    {% else %}
+      <p>Access Restricted, You Are Not Allowed!</p>
+    {% endif %}
   </div>
 {% endblock content %}

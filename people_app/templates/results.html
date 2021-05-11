@@ -1,0 +1,227 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="icon" href="{% static 'images/bus.png' %}" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Evaluation</title>
+    {% comment %} https://icons8.com/icons/set/bus {% endcomment %}
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: purple;">
+    <a class="navbar-brand" href="{% url 'index' %}"><img src="https://assets-fl.reservamos.mx/assets/logo-b09feb00a641615eb083fedea266d68ed48e1e46687e198437b7a1aab251860d.svg" alt="Reservamos"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+        <a class="nav-link active" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+        {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'start_evaluation' %}">Start Evaluation</a>
+        {% endif %}
+        {% if user.email == 'edith@reservamos.mx' %}
+        <a class="nav-link" href="{% url 'peoplelist' %}">Add People </a>
+        <a class="nav-link" href="{% url 'all_results' %}">All Answers</a>
+        {% comment %} <a class="nav-link" href="{% url 'evaluate' %}">Evaluation</a> {% endcomment %}
+        <a class="nav-link" href="{% url 'evaluated_people' %}">Results</a>
+        {% endif %}
+        </div>
+    </div>
+      <div class="form-inline my-2 my-lg-0">
+            <a href="{% url 'logout' %}">
+          <button class="btn btn-info my-2 my-sm-0" type="submit">Logout</button>
+        </a>
+      </div>
+    </nav>
+  </head>
+  <body class="mb-5">
+
+
+
+  <div class="container mt-5">
+    <div class="">
+      <h2 class="text-center">Reporte Individual - {{person}}</h3><br>
+      <h3>Criterios de Evaluación Reservamos</h2> 
+      <p>El Performance Review está dividido en dos áreas claves que en total suman un 100%.</p>
+      <h3>Performance Review:</h3>
+    </div>
+
+    <div class="table-responsive mt-3 row d-flex justify-content-center">
+      <table class="table table-bordered table-hover col-8 text-center">
+          <thead>
+          <tr>
+              <td class="align-middle">Competencias:</td>
+              <td class="align-middle">Logro de OKR's:</td>
+              <td class="align-middle">Total:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+              <td>30%</td><td>70%</td><td>100%</td>
+          </tr>
+          </tbody>
+      </table>
+    </div>
+    <div">
+      <h3>Escala que mide los resultados:</h3>
+
+        {% comment %} https://www.geeksforgeeks.org/how-to-get-circular-buttons-in-bootstrap-4/ {% endcomment %}
+        <div class="mt-5 mb-5 row d-flex justify-content-center">
+        <div>
+        <button type="button" class="btn btn-danger btn-circle btn-xl">Less to 50 %</button>
+        <button type="button" class="btn btn-warning btn-circle btn-xl">50 - 80.9 %</button>
+        <button type="button" class="btn btn-success btn-circle btn-xl">81 - 100 %</button>
+        <button type="button" class="btn btn-primary btn-circle btn-xl">Greater to 100 %</button>        
+        </div>
+        </div>
+
+    </div>
+    <div class="container">
+    <h4>Ponderación de resultados, competencias y OKRs</h4>
+    </div>
+    <div class="table-responsive mt-3 row d-flex justify-content-center">
+      <table class="table table-bordered table-hover col-8 text-center">
+          <thead>
+              <tr>
+                  <th class="align-middle">Resultado de OKRs</th>
+                  <th class="align-middle">Autoevaluación Competencias</th>
+                  <th class="align-middle">Evaluación del equipo (Competencias)</th>
+                  <th class="align-middle">Total</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td class="align-middle">{{result_okr}}%</td>
+                  <td class="align-middle">{{self_evaluation}}%</td>
+                  <td class="align-middle">{{team_evaluation}}%</td>
+                  <td class="align-middle">{{total_evaluation}}%</td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+
+    <div class="card graph col-md-6 offset-md-3 my-5 mb-5">
+      <div class="card-body">
+          <p>Resultados por competencias</p>
+          <hr>
+      </div>
+
+
+        <canvas id="myChart" width="300" height="170"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create can be line, bar, horizontalBar, pie, radar, doughnut, polarArea ...
+            type: 'horizontalBar',    <!-- https://www.chartjs.org/docs/latest/getting-started/ -->
+
+            // The data for our dataset https://www.youtube.com/watch?v=B5rCrmXK5Y0
+            data: {
+                labels: [ {% for item in y_values %}
+                             "{{ item }}",
+                           {% endfor %} ],  // ['January', 'February', 'March', 'April', 'May', 'June', 'July']
+                datasets: [{
+                    label: 'Auto Evaluation', //
+                    backgroundColor: 'rgb(30,144,255)', //(128,0,128) if I want a color for each bar, i add  values as a matrix
+                    borderColor: 'rgb(30,144,255)',
+                    borderWidth: 2, // width in pixels
+                    barThickness: 18,
+                    maxBarThickness: 30,
+                    data: [ {% for item in self_x_values %}
+                                "{{ item }}",
+                            {% endfor %} ]  // [0, 10, 5, 2, 20, 30, 45]
+                }, {
+                    label: 'Performance Review', //
+                    backgroundColor: '#440a67', // if I want a color for each bar, i add  values as a matrix
+                    borderColor: 'indigo',
+                    borderWidth: 2, // width in pixels
+                    barThickness: 18,
+                    maxBarThickness: 30,
+                    data: [ {% for item in x_values %}
+                                "{{ item }}",
+                            {% endfor %} ]  // [0, 10, 5, 2, 20, 30, 45]
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                legend: {
+                    display: true,  // if true, it appears
+                    // position: 'right', // default in the center
+                    labels: {
+                        // This more specific font property overrides the global property
+                        fontColor: 'black',
+                        fontSize: 12,
+                        fontFamily: "'Roboto', sans-serif",
+                        fontStyle: '500',
+                    }
+                    
+                },
+                layout: {
+                    padding: {
+                        left: 1,
+                        right: 120,
+                        bottom: 0,
+                        top: 0
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            // autoSkip: false,
+                            maxRotation: 30,
+                            minRotation: 30,
+                            fontSize: 12,
+                            labelMaxWidth: 20,
+                            max: 100,
+                            stepSize: 10,
+                        },
+                        gridLines: {
+                            display: true,
+                            offsetGridLines: false,
+                            drawOnChartArea: true,
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: { display: false},
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 20,
+                            fontSize: 12, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500'
+                        },
+                    }]
+                },
+                //title: {
+                //    display: true,
+                //    text: 'Custom Chart Title'
+                //},
+            }
+        });
+    </script>
+
+    </div>
+  </div>
+
+
+
+<!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
+

@@ -3,10 +3,18 @@ bgcolor-navbar {
     background-color: #7952b3;
     box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 5%), inset 0 -1px 0 rgb(0 0 0 / 10%);
 }
-p {
+/* p {
     color: red;
     text-shadow: #FC0 1px 0 10px;
-}
+} */
 .margin-auto {
     padding: auto;
+}
+.btn-circle.btn-xl {
+    width: 100px;
+    height: 100px;
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    text-align: center;
 }

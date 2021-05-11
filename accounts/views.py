@@ -12,7 +12,7 @@ def register(request):
             form.save()
             messages.success(
                 request, ("New User Account Created, Login to Get Started!"))
-            return redirect('register')
+            return redirect('login')
         # if register_form.errors:
         #     password1 = register_form.data['password1']
         #     password2 = register_form.data['password2']

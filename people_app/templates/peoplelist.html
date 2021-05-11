@@ -5,6 +5,7 @@
 {%block content %}
   <div class='container'>
     </br>
+    {% if user.email == 'edith@reservamos.mx' or user.is_superuser %}
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -96,6 +97,6 @@
         <li class="page-item"><a class="page-link" href="?pg={{ all_people.paginator.num_pages }}">>></a></li>
       </ul>
     </nav>
-
+    {% endif %}
   </div>
 {% endblock content%}

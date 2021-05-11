@@ -10,8 +10,8 @@ urlpatterns = [
 
     path('', people_views.index, name='index'),
     path('peoplelist/', include('people_app.urls')),
-    path('contact', people_views.contact, name='contact'),
-    path('about-us', people_views.about, name='about'),
+    path('start_evaluation', people_views.start_evaluation, name='start_evaluation'),
+    path('all_answers', people_views.all_results, name='all_results'),
     # path('evaluation', people_views.evaluation, name='evaluation'),
     path('', include('evaluation_app.urls'))
 ]

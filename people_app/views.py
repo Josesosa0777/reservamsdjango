@@ -23,11 +23,7 @@ import numpy as np
 def people(request):
     # {} if I need to send any content
     if request.method == "POST":
-        print("POST formulario: ")
-        print(request.POST)
-        print("Esto ES")
         form = PeopleForm(request.POST or None)
-        print(form)
         if form.is_valid():
             form.save()
         messages.success(request, ("New Person Added!"))
@@ -41,7 +37,7 @@ def people(request):
 
 
 @login_required
-def contact(request):
+def start_evaluation(request):
     if request.method == "POST":
         form = request.POST
         current_user = str(request.user)
@@ -209,9 +205,10 @@ def contact(request):
 
         if (current_user == personEmail):
             name_evaluator = personName
-    return render(request, 'contact.html', {'list_people': list_people, 'name_evaluator': name_evaluator})
+    return render(request, 'start_evaluation.html', {'list_people': list_people, 'name_evaluator': name_evaluator})
 
 
+@login_required
 def evaluated_people(request):
     current_user = str(request.user)
     all_answer = AnswerList.objects.all()
@@ -310,13 +307,19 @@ def evaluated_people(request):
         # cada 3 respuestas me debe dar una gráfica, entonces hay que promediar cada 3 respuestas:
         print(answers_mean)
         x_ans = []
+        self_x_ans = []
         for i in range(0, len(answers_mean)):
             if (i+1) % 3 == 0:
                 elem_mean = np.mean(answers_mean[i-2:i+1])
+                self_elem_mean = np.mean(self_answers_mean[i-2:i+1])
                 # almacena promed. cada 3 elements (el num de preguntas deben ser múltiplo de 3)
                 x_ans.append(elem_mean)
+                self_x_ans.append(self_elem_mean)
         x_ans = np.round(x_ans, decimals=2)
+        self_x_ans = np.round(self_x_ans, decimals=2)
         print(x_ans)
+        print("THE SELF ANS")
+        print(self_x_ans)
         # remove the space before and after each element of the category
         for elem in range(0, len(category)):
             category[elem] = category[elem].strip()
@@ -333,11 +336,10 @@ def evaluated_people(request):
         print(result_okr)
         print(team_evaluation)
 
-        return render(request, 'evaluation_form.html', {'person': chosen_person, 'options': all_answer,
-                                                        'x_values': x_ans, 'y_values': y_ans, 'team_evaluation': team_evaluation,
-                                                        'result_okr': result_okr, 'self_evaluation': self_evaluation, 'total_evaluation': total_evaluation,
-                                                        'user': current_user})
-
+        return render(request, 'results.html', {'person': chosen_person, 'options': all_answer, 'self_x_values': self_x_ans,
+                                                'x_values': x_ans, 'y_values': y_ans, 'team_evaluation': team_evaluation,
+                                                'result_okr': result_okr, 'self_evaluation': self_evaluation, 'total_evaluation': total_evaluation,
+                                                'user': current_user})
     # current_user = str(request.user)
     # all_answer = AnswerList.objects.all()
     names = []
@@ -351,19 +353,24 @@ def evaluated_people(request):
     return render(request, 'evaluated_people.html', {'user': current_user, 'options': my_name_list})
 
 
-def about(request):
+@login_required
+def all_results(request):
     all_answer = AnswerList.objects.all()
     print(all_answer)
     paginator = Paginator(all_answer, 10)  # number of items per page
     page = request.GET.get('pg')
     all_answer = paginator.get_page(page)
-    return render(request, 'about.html', {'all_answer': all_answer})
+    return render(request, 'all_results.html', {'all_answer': all_answer})
 
 
 @login_required
 def delete_people(request, people_id):
     people = PeopleList.objects.get(pk=people_id)  # pk is for primary key
-    people.delete()
+    current_user = str(request.user)
+    if current_user == 'edith@reservamos.mx':
+        people.delete()
+    else:
+        messages.error(request, ("Access Restricted, You Are Not Allowed."))
     return redirect('peoplelist')
 
 
@@ -389,6 +396,7 @@ def index(request):
 
 
 # @csrf_exempt
+@login_required
 def evaluation(request):
     if request.method == "POST":
         name_evaluated = request.POST['name_person']
