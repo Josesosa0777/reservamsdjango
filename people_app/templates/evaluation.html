@@ -13,9 +13,9 @@
 <div class="container mt-5 mb-5">     {% comment %} {{ user.email }} {% endcomment %}
     <h3 class="text-center">Evaluación de {{name_evaluated}}, por {{name_evaluator}} </h3>
     <h3>Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
-performance del equipo de Reservamos.{{area}}</h3>
+performance del equipo de Reservamos.</h3>
     <div class='container d-flex justify-content-center'>
-        <form action="{% url 'contact' %}" method="POST" class="form-signin mt-3 col-12 register-login-input">{% csrf_token %}
+        <form action="{% url 'start_evaluation' %}" method="POST" class="form-signin mt-3 col-12 register-login-input">{% csrf_token %}
             <fieldset>
                 {% if area == "engineer" %}
                     {% if category == "Operation" %}
@@ -110,10 +110,10 @@ performance del equipo de Reservamos.{{area}}</h3>
                         <table>
                         <tr class="container row justify-content-around">
                             <td class="col-6"><label for="Q1">Q1:</label>
-                            <input class="col-8" type="number" step="any" id="Q1" name="Q1" placeholder="--">%
+                            <input class="col-8" type="number" step="any" id="Q1" name="Q1" placeholder="--" required>%
                             </td>
                             <td class="col-6"><label for="Q2">Q2:</label>
-                            <input class="col-8" type="number" step="any" id="Q2" name="Q2" placeholder="--">%
+                            <input class="col-8" type="number" step="any" id="Q2" name="Q2" placeholder="--" required>%
                             </td>
                             <td class="col-6"><label for="Q3">Q3:</label>
                             <input class="col-8" type="number" step="any" id="Q3" name="Q3" placeholder="--">%

@@ -326,12 +326,19 @@ def evaluated_people(request):
         y_ans = category
         print(y_ans)
         # Resultados:
-        result_okr = np.round(mean_okr*0.7, decimals=2)
         self_evaluation = np.round(np.mean(self_answers_mean*0.3), decimals=2)
         print(self_evaluation)
         # Evaluación del team Competencias
         team_evaluation = np.round(np.mean(x_ans*0.3), decimals=2)
-        total_evaluation = team_evaluation + result_okr
+        if mean_okr:
+            result_okr = np.round(mean_okr*0.7, decimals=2)
+            total_evaluation = np.round(
+                (team_evaluation + result_okr), decimals=2)
+        else:
+            result_okr = '-- '
+            total_evaluation = team_evaluation
+        # ---------
+
         print("RESULT OKR ")
         print(result_okr)
         print(team_evaluation)
@@ -403,7 +410,6 @@ def evaluation(request):
         # ------------------
         # Get current user:
         current_user = str(request.user)
-        print(current_user)
         # Create dictionary with person Data from PeopleList
         list_people = []
         name_evaluator = ''
@@ -416,10 +422,10 @@ def evaluation(request):
                 personLeader = name.leader
             if (current_user == name.email):
                 name_evaluator = name.name
-                print(name_evaluator)
         data = {'email_evaluator': current_user, 'questions_operation': question_operation, 'questions_strategist': question_strategist,
                 'questions_management': question_management, 'questions_operation_engineer': question_operation_engineer,
                 'questions_strategist_engineer': question_strategist_engineer, 'questions_management_engineer': question_management_engineer,
                 'logged_in': True, 'name_evaluated': name_evaluated, 'category': personCategory, 'area': personArea, 'leader_person': personLeader,
                 'email': personEmail, 'name_evaluator': name_evaluator}
+        print("THE DATA")
     return render(request, 'evaluation.html', data)
