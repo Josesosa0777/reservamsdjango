@@ -227,6 +227,7 @@ def evaluated_people(request):
         self_stored_answers = []  # answers of autoevaluation
         mean_okr = ''
         team_evaluation = []
+        self_evaluation = []
         result_okr = []
         x_ans = []
         self_x_ans = []
