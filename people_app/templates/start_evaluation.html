@@ -7,16 +7,16 @@
         <h1> {{contact_text}} </h1>   
     </div> {% endcomment %}
     <div class="container mt-5">     {% comment %} {{ user.email }} {% endcomment %}
-      <h3 class="questions-title">Hola {{name_evaluator}}. Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
-        performance del equipo de Reservamos. </h3>
+      <h4 class="questions-title">Hola {{name_evaluator}}. Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
+        performance del equipo de Reservamos. </h4>
       <div class='container d-flex justify-content-center text-center'>
         <form action="{% url 'evaluation' %}" method="POST" class="form-signin mt-3 col-6 register-login-input">{% csrf_token %}
           <fieldset>
             <legend>Choose a person to start the evaluation</legend>
-              <select name="name_person" id="name-select" onchange="javascript:this.form.submit()" required>
+              <select class="form-control form-control-sm" name="name_person" id="name-select" onchange="javascript:this.form.submit()" required>
                 <option value=""> -- Please choose an option -- </option>
-                {% for people in list_people %}
-                <option value="{{ people.name }}">{{ people.name }}</option>
+                {% for people in sorted_people %}
+                <option value="{{ people }}">{{ people }}</option>
                 {% endfor %}
               </select>
           </fieldset>

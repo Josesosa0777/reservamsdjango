@@ -30,7 +30,7 @@ def people(request):
         return redirect('peoplelist')
     else:
         all_people = PeopleList.objects.all()
-        paginator = Paginator(all_people, 5)  # number of items per page
+        paginator = Paginator(all_people, 10)  # number of items per page
         page = request.GET.get('pg')
         all_people = paginator.get_page(page)
         return render(request, 'peoplelist.html', {'all_people': all_people})
@@ -194,9 +194,11 @@ def start_evaluation(request):
     print(current_user)
     # Create dictionary with person Data from PeopleList
     list_people = []
+    name_people = []
     name_evaluator = ''
     all_people = PeopleList.objects.all()
     for name in all_people:
+        name_people.append(name.name)
         personName = name.name
         personCategory = name.category
         personEmail = name.email
@@ -213,7 +215,11 @@ def start_evaluation(request):
 
         if (current_user == personEmail):
             name_evaluator = personName
-    return render(request, 'start_evaluation.html', {'list_people': list_people, 'name_evaluator': name_evaluator})
+    print(name_people)
+    print("SORTED")
+    sorted_people = sorted(name_people, key=str.lower)
+    print(sorted_people)
+    return render(request, 'start_evaluation.html', {'list_people': list_people, 'name_evaluator': name_evaluator, 'sorted_people': sorted_people})
 
 
 @login_required
@@ -265,25 +271,6 @@ def evaluated_people(request):
                 category = [s.replace("]", "") for s in category]
                 category = [s.replace("'", "") for s in category]
             if chosen_person == person.evaluated_person and person.evaluator != chosen_person:
-                val_okrs = []
-                val_okrs.append(person.Q1)
-                val_okrs.append(person.Q2)
-                val_okrs.append(person.Q3)
-                val_okrs.append(person.Q4)
-                val_okrs.append(person.C1)
-                val_okrs.append(person.C2)
-                val_okrs.append(person.C3)
-                val_okrs.append(person.C4)
-                val_okrs.append(person.C5)
-                val_okrs.append(person.C6)
-                val_okrs.append(person.C7)
-                val_okrs.append(person.C8)
-                comment_1 = person.comment_1
-                comment_2 = person.comment_2
-                result_mean_okrs = np.average(
-                    [x for x in val_okrs if x != 0])
-                if result_mean_okrs > 0:
-                    mean_okr = result_mean_okrs
                 ans = person.answers
                 ans = ans.replace(' ', '')
                 ans = ans.replace("'", "")
@@ -313,6 +300,27 @@ def evaluated_people(request):
                 category = [s.replace("]", "") for s in category]
                 category = [s.replace("'", "") for s in category]
                 print(category)
+            if chosen_person == person.evaluated_person and person.evaluator == person.leader:
+                val_okrs = []
+                val_okrs.append(person.Q1)
+                val_okrs.append(person.Q2)
+                val_okrs.append(person.Q3)
+                val_okrs.append(person.Q4)
+                val_okrs.append(person.C1)
+                val_okrs.append(person.C2)
+                val_okrs.append(person.C3)
+                val_okrs.append(person.C4)
+                val_okrs.append(person.C5)
+                val_okrs.append(person.C6)
+                val_okrs.append(person.C7)
+                val_okrs.append(person.C8)
+                comment_1 = person.comment_1
+                comment_2 = person.comment_2
+                result_mean_okrs = np.average(
+                    [x for x in val_okrs if x != 0])
+                if result_mean_okrs > 0:
+                    mean_okr = result_mean_okrs
+
         # average of array: https://stackoverflow.com/questions/2153444/python-finding-average-of-a-nested-list/2157646
         if stored_answers:
             answers_mean = np.mean(stored_answers, axis=0)
@@ -394,6 +402,7 @@ def delete_people(request, people_id):
     current_user = str(request.user)
     if current_user == 'edith@reservamos.mx':
         people.delete()
+        messages.success(request, ("Person Deleted."))
     else:
         messages.error(request, ("Access Restricted, You Are Not Allowed."))
     return redirect('peoplelist')
@@ -429,7 +438,7 @@ def evaluation(request):
         # Get current user:
         current_user = str(request.user)
         # Create dictionary with person Data from PeopleList
-        list_people = []
+        # list_people = []
         name_evaluator = ''
         all_people = PeopleList.objects.all()
         for name in all_people:

@@ -29,3 +29,12 @@ bgcolor-navbar {
 .note {
     font-size: 12px;
 }
+body{
+    -webkit-print-color-adjust:exact;
+  }
+.result-padding {
+    padding-left: 11rem;
+}
+.table-fixed {
+    table-layout : fixed;
+}

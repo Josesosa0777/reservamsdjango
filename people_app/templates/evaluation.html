@@ -11,9 +11,9 @@
 </script>
   
 <div class="container mt-5 mb-5">     {% comment %} {{ user.email }} {% endcomment %}
-    <h3 class="text-center">Evaluación de {{name_evaluated}}, por {{name_evaluator}} </h3>
-    <h3>Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
-performance del equipo de Reservamos.</h3>
+    <h3 class="text-center mb-4">Evaluación de {{name_evaluated}}, por {{name_evaluator}} </h3>
+    <h4>Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
+performance del equipo de Reservamos.</h4>
     <div class='container d-flex justify-content-center'>
         <form action="{% url 'start_evaluation' %}" method="POST" class="form-signin mt-3 col-12 register-login-input">{% csrf_token %}
             <fieldset>
@@ -41,18 +41,18 @@ performance del equipo de Reservamos.</h3>
 
                     {% if name_evaluator == leader_person %}
                         <div class="mt-2">
-                            <h3>Evaluación por Ciclos</h3>
+                            <h5>Evaluación por Ciclos</h5>
                             <p> Si eres líder de equipo ingresa la evaluación de cada ciclo hasta la fecha de la persona evaluada.
-                            Si el ciclo no ha sido evaluado deja Vacío el espacio.
+                            Si el ciclo no ha sido evaluado deja <b>vacío</b> el espacio.
                             </p>
                             <table>
                             <tr class="container row justify-content-around">
                                 <td class="col-5">
                                 <label for="C1">C1:</label>
-                                <input class="col-8" type="number" step="any" id="C1" name="C1" placeholder="--">%
+                                <input class="col-8" type="number" step="any" id="C1" name="C1" placeholder="--" required>%
                                 </td>
                                 <td class="col-5"><label for="C2">C2:</label>
-                                <input class="col-8" type="number" step="any" id="C2" name="C2" placeholder="--">%
+                                <input class="col-8" type="number" step="any" id="C2" name="C2" placeholder="--" required>%
                                 </td>
                                 <td class="col-5"><label for="C3">C3:</label>
                                 <input class="col-8" type="number" step="any" id="C3" name="C3" placeholder="--">%
@@ -76,6 +76,19 @@ performance del equipo de Reservamos.</h3>
                                 </td>
                             </tr>
                             </table>
+                        </div>
+                        <div class="mt-4">
+                            <h5>Feedback para la persona evaluada </h5>
+                            <div class="mb-3">
+                                <label for="comment_1" class="form-label">Logros más destacados</label>
+                                <textarea class="form-control form-control-sm" rows="3" name="comment_1" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comment_1" class="form-label">Recomendaciones</label>
+                                <textarea class="form-control form-control-sm" rows="3" name="comment_2" required></textarea>
+                            </div>
+            
+                            </div>
                         </div>
                         {% endif %}
                     
@@ -103,9 +116,9 @@ performance del equipo de Reservamos.</h3>
 
                     {% if name_evaluator == leader_person %}
                     <div class="mt-2">
-                        <h3>Evaluación por Q's</h3>
+                        <h5>Evaluación por Q's</h5>
                         <p> Si eres líder de equipo ingresa la evaluación de cada Q hasta la fecha de la persona evaluada.
-                        Si el Q no ha sido evaluado deja <b>Vacío</b> el espacio.
+                        Si el Q no ha sido evaluado deja <b>vacío</b> el espacio.
                         </p>
                         <table>
                         <tr class="container row justify-content-around">
