@@ -229,6 +229,7 @@ def evaluated_people(request):
         team_evaluation = []
         result_okr = []
         x_ans = []
+        self_x_ans = []
         comment_1 = ''
         comment_2 = ''
         # evalua cuando los resultados de cuando la persona aparece en la db
@@ -327,7 +328,6 @@ def evaluated_people(request):
 
         if self_stored_answers:
             self_answers_mean = np.mean(self_stored_answers, axis=0)
-            self_x_ans = []
             for i in range(0, len(self_answers_mean)):
                 if (i+1) % 3 == 0:
                     self_elem_mean = np.mean(self_answers_mean[i-2:i+1])
