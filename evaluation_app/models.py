@@ -19,7 +19,7 @@ class AnswerList(models.Model):
     C6 = models.FloatField()
     C7 = models.FloatField()
     C8 = models.FloatField()
-    category_answer = models.CharField(max_length=100)
+    category_answer = models.SlugField(max_length=255)
     answer_date = models.DateTimeField()
     leader = models.CharField(max_length=70)
     comment_1 = models.CharField(max_length=1000)
