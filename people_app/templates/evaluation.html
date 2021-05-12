@@ -105,7 +105,7 @@ performance del equipo de Reservamos.</h3>
                     <div class="mt-2">
                         <h3>Evaluación por Q's</h3>
                         <p> Si eres líder de equipo ingresa la evaluación de cada Q hasta la fecha de la persona evaluada.
-                        Si el Q no ha sido evaluado deja Vacío el espacio.
+                        Si el Q no ha sido evaluado deja <b>Vacío</b> el espacio.
                         </p>
                         <table>
                         <tr class="container row justify-content-around">
@@ -123,6 +123,19 @@ performance del equipo de Reservamos.</h3>
                             </td>
                         </tr>
                         </table>
+                    </div>
+                    <div class="mt-4">
+                        <h5>Feedback para la persona evaluada </h5>
+                        <div class="mb-3">
+                            <label for="comment_1" class="form-label">Logros más destacados</label>
+                            <textarea class="form-control form-control-sm" rows="3" name="comment_1" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment_1" class="form-label">Recomendaciones</label>
+                            <textarea class="form-control form-control-sm" rows="3" name="comment_2" required></textarea>
+                        </div>
+        
+                        </div>
                     </div>
                     {% endif %}
                 {% endif %}

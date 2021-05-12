@@ -39,7 +39,10 @@ def people(request):
 @login_required
 def start_evaluation(request):
     if request.method == "POST":
+        comment_1 = ''
+        comment_2 = ''
         form = request.POST
+        print(form)
         current_user = str(request.user)
         values = []
         categories = []
@@ -92,7 +95,9 @@ def start_evaluation(request):
             # answer of the questions ans can be (0 -> 4)  añadi al final persona evaluada cómo afecta?
             print(person_Leader+" lead")
             if evaluator_name == person_Leader:
-                for index in range(1, len(form)-5):
+                comment_1 = form['comment_1']
+                comment_2 = form['comment_2']
+                for index in range(1, len(form)-7):
                     ind = "a"+str(index)
                     values.append(int(form[ind]))  # Resultados de respuestas
                 # example of working with matrix using numpy:
@@ -124,7 +129,9 @@ def start_evaluation(request):
             q3 = 0
             q4 = 0
             if evaluator_name == person_Leader:
-                for index in range(1, len(form)-9):
+                comment_1 = form['comment_1']
+                comment_2 = form['comment_2']
+                for index in range(1, len(form)-11):
                     ind = "a"+str(index)
                     values.append(int(form[ind]))
                     #
@@ -178,7 +185,8 @@ def start_evaluation(request):
             C1=c1, C2=c2, C3=c3, C4=c4, C5=c5, C6=c6, C7=c7, C8=c8,
             category_answer=str(categories),
             answer_date=monterrey_now,
-            leader=person_Leader
+            leader=person_Leader,
+            comment_1=comment_1, comment_2=comment_2
         )
 
     # Get current user:
@@ -221,6 +229,8 @@ def evaluated_people(request):
         team_evaluation = []
         result_okr = []
         x_ans = []
+        comment_1 = ''
+        comment_2 = ''
         # evalua cuando los resultados de cuando la persona aparece en la db
         for person in all_answer:
             if chosen_person == person.evaluated_person and person.evaluator == chosen_person:
@@ -266,13 +276,12 @@ def evaluated_people(request):
                 val_okrs.append(person.C6)
                 val_okrs.append(person.C7)
                 val_okrs.append(person.C8)
-                print("OKRS START")
-                print(val_okrs)
+                comment_1 = person.comment_1
+                comment_2 = person.comment_2
                 result_mean_okrs = np.average(
                     [x for x in val_okrs if x != 0])
                 if result_mean_okrs > 0:
                     mean_okr = result_mean_okrs
-                print("OKRS END")
                 ans = person.answers
                 ans = ans.replace(' ', '')
                 ans = ans.replace("'", "")
@@ -330,8 +339,11 @@ def evaluated_people(request):
                 np.mean(self_answers_mean*0.3), decimals=2)
 
         # remove the space before and after each element of the category
+        number_elements = []
         for elem in range(0, len(category)):
+            number_elements.append(elem)
             category[elem] = category[elem].strip()
+
         y_ans = category
 
         if mean_okr and team_evaluation:
@@ -348,11 +360,10 @@ def evaluated_people(request):
         print("RESULT OKR ")
         print(result_okr)
         print(team_evaluation)
-
         return render(request, 'results.html', {'person': chosen_person, 'options': all_answer, 'self_x_values': self_x_ans,
                                                 'x_values': x_ans, 'y_values': y_ans, 'team_evaluation': team_evaluation,
                                                 'result_okr': result_okr, 'self_evaluation': self_evaluation, 'total_evaluation': total_evaluation,
-                                                'actual_user': current_user})
+                                                'actual_user': current_user, 'comment_1': comment_1, 'comment_2': comment_2, 'number_elements': number_elements})
     # current_user = str(request.user)
     # all_answer = AnswerList.objects.all()
     names = []

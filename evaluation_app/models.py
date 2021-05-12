@@ -22,3 +22,5 @@ class AnswerList(models.Model):
     category_answer = models.CharField(max_length=50)
     answer_date = models.DateTimeField()
     leader = models.CharField(max_length=50)
+    comment_1 = models.CharField(max_length=1000)
+    comment_2 = models.CharField(max_length=1000)
