@@ -7,8 +7,13 @@
         <h1> {{contact_text}} </h1>   
     </div> {% endcomment %}
     <div class="container mt-5">     {% comment %} {{ user.email }} {% endcomment %}
+    {% if name_evaluator %}
       <h4 class="questions-title">Hola {{name_evaluator}}. Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
         performance del equipo de Reservamos. </h4>
+    {% else %}
+      <h4 class="questions-title">Hola {{user.email}}. Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
+        performance del equipo de Reservamos. </h4>
+    {% endif %}
       <div class='container d-flex justify-content-center text-center'>
         <form action="{% url 'evaluation' %}" method="POST" class="form-signin mt-3 col-6 register-login-input">{% csrf_token %}
           <fieldset>

@@ -13,7 +13,7 @@
     {% block title%}
     {% endblock title%}
     {% comment %} https://icons8.com/icons/set/bus {% endcomment %}
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: purple;">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark" style="background-color: purple;">
     <a class="navbar-brand" href="{% url 'index' %}"><img src="https://assets-fl.reservamos.mx/assets/logo-b09feb00a641615eb083fedea266d68ed48e1e46687e198437b7a1aab251860d.svg" alt="Reservamos"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -49,7 +49,7 @@
     {% endif %}
     </nav>
   </head>
-  <body class="bg-light">
+  <body class="pt-5 bg-light">
     {% block content%}
     {% endblock content %}
 

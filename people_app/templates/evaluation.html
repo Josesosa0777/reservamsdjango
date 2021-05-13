@@ -11,7 +11,11 @@
 </script>
   
 <div class="container mt-5 mb-5">     {% comment %} {{ user.email }} {% endcomment %}
+    {% if name_evaluator %}
     <h3 class="text-center mb-4">Evaluación de {{name_evaluated}}, por {{name_evaluator}} </h3>
+    {% else %}
+    <h3 class="text-center mb-4">Evaluación de {{name_evaluated}}, por {{user.email}} </h3>
+    {% endif %}
     <h4>Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
 performance del equipo de Reservamos.</h4>
     <div class='container d-flex justify-content-center'>
@@ -55,10 +59,10 @@ performance del equipo de Reservamos.</h4>
                                 <input class="col-8" type="number" step="any" id="C2" name="C2" placeholder="--" required>%
                                 </td>
                                 <td class="col-5"><label for="C3">C3:</label>
-                                <input class="col-8" type="number" step="any" id="C3" name="C3" placeholder="--">%
+                                <input class="col-8" type="number" step="any" id="C3" name="C3" placeholder="--" required>%
                                 </td>
                                 <td class="col-5"><label for="C4">C4:</label>
-                                <input class="col-8" type="number" step="any" id="C4" name="C4" placeholder="--">%
+                                <input class="col-8" type="number" step="any" id="C4" name="C4" placeholder="--" required>%
                                 </td>
                             </tr>
                             <tr class="container row justify-content-around">
