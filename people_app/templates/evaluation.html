@@ -21,7 +21,7 @@ performance del equipo de Reservamos.</h4>
     <div class='container d-flex justify-content-center'>
         <form action="{% url 'start_evaluation' %}" method="POST" class="form-signin mt-3 col-12 register-login-input">{% csrf_token %}
             <fieldset>
-                {% if area == "engineer" %}
+                {% if area == "Engineer" %}
                     {% if category == "Operation" %}
                     {% for question in questions_operation_engineer %}
                     {% include "questions.html" %}
@@ -96,7 +96,7 @@ performance del equipo de Reservamos.</h4>
                         </div>
                         {% endif %}
                     
-                {% elif area != "engineer" %}
+                {% elif area != "Engineer" %}
                     {% if category == "Operation" %}
                     {% for question in questions_operation %}
                     {% include "questions.html" %}

@@ -5,7 +5,7 @@
 
 {% block content%}
 
-{% if user.email == 'edith@reservamos.mx' %}
+{% if current_person.rol == True %}
 <div class="container mt-3">
 
     <h4 class="">Resultados Reporte Individual {{logged_in}}</h4>

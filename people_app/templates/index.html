@@ -5,7 +5,19 @@
 {% endblock title%}
 
 {% block content%}
+
   <div class='container'>
+    {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-info alert-dismissible fade show mt-5 text-center" role="alert">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>  
+          </div>
+      {% endfor %}
+    {% endif %}
+
     <div class="row mt-5">
       <div class="col-md-10 offset-md-1">
         <center><p class="h3 text-primary">Welcome to the Performance Evaluation of Reservamos!</p></center>

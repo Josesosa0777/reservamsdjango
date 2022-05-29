@@ -7,55 +7,135 @@
   <div class='container'>
     </br>
     {% comment %} {% if people_obj.manage == request.user %} {% endcomment %}
-    {% if user.email == 'edith@reservamos.mx' %}
+    {% if current_person.rol == True %}
     <form method="POST" class='row'>
       {% csrf_token %}  {% comment %} to make secure {% endcomment %}
-        <div class='container'>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-sm">Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control form-control-sm" name='name' placeholder="{{people_obj.name}}" value="{{people_obj.name}}" required>
+      <div class='container'>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label col-form-label-sm">Name</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control form-control-sm" name='name' value="{{people_obj.name}}" placeholder="Full Name" required>
+              </div>
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-sm">Category</label>
-            <div class="col-sm-10">
-              <select class="form-control form-control-sm" name="category" id="category-select" required>
-                <option value=""> -- Please choose an option -- </option>
-                <option value="Operation">Operation</option>
-                <option value="Strategist">Strategist</option>
-                <option value="Direction">Direction</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-sm">Email</label>
-            <div class="col-sm-10">
-              <input type="email" class="form-control form-control-sm" name='email' placeholder="email" value="{{people_obj.email}}" required>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-sm">Area</label>
-            <div class="col-sm-10">
-              <select class="form-control form-control-sm" name="area" id="area-select" required>
-                <option value=""> -- Please choose an option -- </option>
-                <option value="business-development">business-development</option>
-                <option value="customer-care">customer-care</option>
-                <option value="customer-service">customer-service</option>
-                <option value="engineer">engineer</option>
-                <option value="finance">finance</option>
-                <option value="HR">HR</option>
-                <option value="marketing">marketing</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-sm">Leader Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control form-control-sm" name='leader' placeholder="full name of the leader" value="{{people_obj.leader}}" required>
+          <div class="col-sm-6 form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label col-form-label-sm">Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control form-control-sm" name='email' value="{{people_obj.email}}" placeholder="email" required>
+              </div>
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label col-form-label-sm">Category</label>
+              <div class="col-sm-10">
+                <select class="form-control form-control-sm" name="category" id="category-select" required>
+                  {% if people_obj.category == 'Operation' %}
+                  <option value="Operation" selected>Operation</option>
+                  {% else %}
+                  <option value="Operation">Operation</option>
+                  {% endif %}
+                  {% if people_obj.category == 'Strategist' %}
+                  <option value="Strategist" selected>Strategist</option>
+                  {% else %}
+                  <option value="Strategist">Strategist</option>
+                  {% endif %}
+                  {% if people_obj.category == 'Direction' %}
+                  <option value="Direction" selected>Direction</option>
+                  {% else %}
+                  <option value="Direction">Direction</option>
+                  {% endif %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label col-form-label-sm">Admin:</label>
+              <div class="col-sm-4">
+                {% if people_obj.rol is False %}
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rol" id="inlineRadio1" checked value="False">
+                  <label class="form-check-label" for="inlineRadio1">False</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rol" id="inlineRadio2" value="True">
+                  <label class="form-check-label" for="inlineRadio2">True</label>
+                </div>
+                {% elif people_obj.rol is True %}
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rol" id="inlineRadio1" value="False">
+                  <label class="form-check-label" for="inlineRadio1">False</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="rol" id="inlineRadio2" checked value="True">
+                  <label class="form-check-label" for="inlineRadio2">True</label>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label col-form-label-sm">Area</label>
+              <div class="col-sm-10">
+                <select class="form-control form-control-sm" name="area" id="area-select" required>
+                  {% if people_obj.category == 'Business-development' %}
+                  <option value="Business-development" selected>Business-development</option>
+                  {% else %}
+                  <option value="Business-development">Business-development</option>
+                  {% endif %}
+                  {% if people_obj.category == 'Customer-care' %}
+                  <option value="Customer-care" selected>Customer-care</option>
+                  {% else %}
+                  <option value="Customer-care">Customer-care</option>
+                  {% endif %}
+                  {% if people_obj.category == 'Customer-service' %}
+                  <option value="Customer-service" selected>Customer-service</option>
+                  {% else %}
+                  <option value="Customer-service">Customer-service</option>
+                  {% endif %}
+                  {% if people_obj.category == 'Engineer' %}
+                  <option value="Engineer" selected>Engineer</option>
+                  {% else %}
+                  <option value="Engineer">Engineer</option>
+                  {% endif %}
+                  {% if people_obj.category == 'Finance' %}
+                  <option value="Finance" selected>Finance</option>
+                  {% else %}
+                  <option value="Finance">Finance</option>
+                  {% endif %}
+                  {% if people_obj.category == 'HR' %}
+                  <option value="HR" selected>HR</option>
+                  {% else %}
+                  <option value="HR">HR</option>
+                  {% endif %}
+                  {% if people_obj.category == 'Marketing' %}
+                  <option value="Marketing" selected>Marketing</option>
+                  {% else %}
+                  <option value="Marketing">Marketing</option>
+                  {% endif %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label col-form-label-sm">Leader Name</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control form-control-sm" name='leader' value="{{people_obj.leader}}" placeholder="Full Name of the Leader" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
         <div class="col-sm-4 container">
             <button type="submit" class="form-control btn btn-primary text-center">Update person</button>
         </div>

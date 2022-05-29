@@ -1,3 +1,4 @@
+import email
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from people_app.models import PeopleList
@@ -17,32 +18,56 @@ import pytz
 from evaluation_app.models import AnswerList
 import numpy as np
 # from django.views.decorators.csrf import csrf_exempt
+import tkinter as tk
+
+window = tk.Tk()
 
 
 @login_required
 def people(request):
-    # {} if I need to send any content
+    current_user = str(request.user)
+    current_person = PeopleList.objects.get(email=current_user)
+    all_people = PeopleList.objects.all()
     if request.method == "POST":
+        email_added = request.POST['email']
+        for person in all_people:
+            if person.email == email_added:
+                messages.warning(request, ("A user with that email alreay exist!"))
+                return redirect('peoplelist')
         form = PeopleForm(request.POST or None)
         if form.is_valid():
+            # email_added = form.cleaned_data.get("email")
             form.save()
-        messages.success(request, ("New Person Added!"))
+            messages.success(request, ("New Person Added!"))
         return redirect('peoplelist')
     else:
-        all_people = PeopleList.objects.all()
+        leader_list = set()
+        for person in all_people:
+            leader_list.add(person.leader)
         paginator = Paginator(all_people, 10)  # number of items per page
         page = request.GET.get('pg')
         all_people = paginator.get_page(page)
-        return render(request, 'peoplelist.html', {'all_people': all_people})
+        return render(request, 'peoplelist.html', {'all_people': all_people, 'current_person': current_person, 'leader_list': leader_list})
 
 
 @login_required
 def start_evaluation(request):
+    current_user = str(request.user)
+    try:
+        current_person = PeopleList.objects.get(email=current_user)
+        print("--", current_person)
+    except Exception as e:
+        current_person = current_user
+        context = {
+            'current_person': current_person,
+        }
+        messages.error(request, ("Access Restricted, You Are Not Allowed. Contact the admin, maybe your current email is not loaded"))
+        return redirect('index')
     if request.method == "POST":
         comment_1 = ''
         comment_2 = ''
         form = request.POST
-        print(form)
+        # print(form)
         current_user = str(request.user)
         values = []
         categories = []
@@ -50,7 +75,6 @@ def start_evaluation(request):
         evaluator_name = ""
         questions = ""
         person_evaluated = str(form['name_person'])
-        print(person_evaluated)
         all_people = PeopleList.objects.all()
         for name in all_people:
             if name.name == person_evaluated:
@@ -60,7 +84,7 @@ def start_evaluation(request):
                 person_Leader = name.leader
             if (current_user == name.email):
                 evaluator_name = name.name
-        if person_Area != "engineer":
+        if person_Area.lower() != "engineer":
             area_person = "not_engineer"
             if person_Category == "Operation":
                 questions = question_operation
@@ -68,7 +92,7 @@ def start_evaluation(request):
                 questions = question_strategist
             elif person_Category == "Direction":
                 questions = question_management
-        if person_Area == "engineer":
+        if person_Area.lower() == "engineer":
             area_person = "engineer"
             if person_Category == "Operation":
                 questions = question_operation_engineer
@@ -123,7 +147,7 @@ def start_evaluation(request):
                 q2 = 0
                 q3 = 0
                 q4 = 0
-        if area_person == "engineer":
+        if area_person.lower() == "engineer":
             q1 = 0
             q2 = 0
             q3 = 0
@@ -171,11 +195,8 @@ def start_evaluation(request):
                 c6 = 0
                 c7 = 0
                 c8 = 0
-        print(values)
         tz = pytz.timezone('America/Monterrey')
         monterrey_now = datetime.now(tz)
-        print(monterrey_now)
-        print(tz)
         new_answers = AnswerList.objects.create(
             evaluator=evaluator_name,
             evaluated_person=person_evaluated,
@@ -189,9 +210,6 @@ def start_evaluation(request):
             comment_1=comment_1, comment_2=comment_2
         )
 
-    # Get current user:
-    current_user = str(request.user)
-    print(current_user)
     # Create dictionary with person Data from PeopleList
     list_people = []
     name_people = []
@@ -215,16 +233,14 @@ def start_evaluation(request):
 
         if (current_user == personEmail):
             name_evaluator = personName
-    print(name_people)
-    print("SORTED")
     sorted_people = sorted(name_people, key=str.lower)
-    print(sorted_people)
-    return render(request, 'start_evaluation.html', {'list_people': list_people, 'name_evaluator': name_evaluator, 'sorted_people': sorted_people})
+    return render(request, 'start_evaluation.html', {'list_people': list_people, 'name_evaluator': name_evaluator, 'sorted_people': sorted_people, 'current_person': current_person})
 
 
 @login_required
 def evaluated_people(request):
     current_user = str(request.user)
+    current_person = PeopleList.objects.get(email=current_user)
     all_answer = AnswerList.objects.all()
     if request.method == "POST":
         form = request.POST
@@ -365,14 +381,10 @@ def evaluated_people(request):
         else:
             total_evaluation = '--'
         # ---------
-
-        print("RESULT OKR ")
-        print(result_okr)
-        print(team_evaluation)
         return render(request, 'results.html', {'person': chosen_person, 'options': all_answer, 'self_x_values': self_x_ans,
                                                 'x_values': x_ans, 'y_values': y_ans, 'team_evaluation': team_evaluation,
                                                 'result_okr': result_okr, 'self_evaluation': self_evaluation, 'total_evaluation': total_evaluation,
-                                                'actual_user': current_user, 'comment_1': comment_1, 'comment_2': comment_2, 'number_elements': number_elements})
+                                                'actual_user': current_user, 'comment_1': comment_1, 'comment_2': comment_2, 'number_elements': number_elements, 'current_person': current_person})
     # current_user = str(request.user)
     # all_answer = AnswerList.objects.all()
     names = []
@@ -383,25 +395,37 @@ def evaluated_people(request):
     paginator = Paginator(my_name_list, 10)  # number of items per page
     page = request.GET.get('pg')
     my_name_list = paginator.get_page(page)
-    return render(request, 'evaluated_people.html', {'actual_user': current_user, 'options': my_name_list})
+    return render(request, 'evaluated_people.html', {'actual_user': current_user, 'options': my_name_list, 'current_person': current_person})
 
 
 @login_required
 def all_results(request):
+    current_user = str(request.user)
+    current_person = PeopleList.objects.get(email=current_user)
     all_answer = AnswerList.objects.all()
-    print(all_answer)
     paginator = Paginator(all_answer, 10)  # number of items per page
     page = request.GET.get('pg')
     all_answer = paginator.get_page(page)
-    return render(request, 'all_results.html', {'all_answer': all_answer})
+    if request.method == "POST":
+        form = request.POST
+        if form['delete_all'] == 'delete_answers':
+            AnswerList.objects.all().delete()
+            return redirect('index')
+    return render(request, 'all_results.html', {'all_answer': all_answer, 'current_person': current_person})
 
 
 @login_required
 def delete_people(request, people_id):
-    people = PeopleList.objects.get(pk=people_id)  # pk is for primary key
     current_user = str(request.user)
-    if current_user == 'edith@reservamos.mx':
-        people.delete()
+    current_person = PeopleList.objects.get(email=current_user)
+    person_deleted = PeopleList.objects.get(pk=people_id)
+    # if current_user == 'edith@reservamos.mx':
+    if current_person.rol == True:
+        if person_deleted.email != current_user:
+            person_deleted.delete()
+        else:
+            messages.warning(request, ("You can't delete to yourself."))
+            return redirect('peoplelist')
         messages.success(request, ("Person Deleted."))
     else:
         messages.error(request, ("Access Restricted, You Are Not Allowed."))
@@ -410,6 +434,8 @@ def delete_people(request, people_id):
 
 @login_required
 def edit_people(request, people_id):
+    current_user = str(request.user)
+    current_person = PeopleList.objects.get(email=current_user)
     if request.method == "POST":
         people = PeopleList.objects.get(pk=people_id)
         form = PeopleForm(request.POST or None, instance=people)
@@ -419,12 +445,24 @@ def edit_people(request, people_id):
         return redirect('peoplelist')
     else:
         people_obj = PeopleList.objects.get(pk=people_id)
-        return render(request, 'edit.html', {'people_obj': people_obj})
+        return render(request, 'edit.html', {'people_obj': people_obj, 'current_person': current_person})
 
 
 def index(request):
+    current_user = str(request.user)
+    if request.user.is_authenticated:
+        try:
+            current_person = PeopleList.objects.get(email=current_user)
+        except:
+            current_person = None
+            context = {
+                'current_person': current_person,
+            }
+            render(request, 'index.html', context)
+    else:
+        current_person = None
     context = {
-        'index_text': 'Welcome Index Page',
+        'current_person': current_person,
     }
     return render(request, 'index.html', context)
 
@@ -449,10 +487,17 @@ def evaluation(request):
                 personLeader = name.leader
             if (current_user == name.email):
                 name_evaluator = name.name
+        all_answers_evaluator = AnswerList.objects.filter(evaluator=name_evaluator)
+        for item in all_answers_evaluator:
+            if item.evaluated_person == name_evaluated:
+                messages.warning(request, (f"You have already evaluated to {name_evaluated}"))
+                greeting = tk.Label(text="Hello, Tkinter")
+                greeting.pack()
+                window.mainloop()
+                return redirect('start_evaluation')
         data = {'email_evaluator': current_user, 'questions_operation': question_operation, 'questions_strategist': question_strategist,
                 'questions_management': question_management, 'questions_operation_engineer': question_operation_engineer,
                 'questions_strategist_engineer': question_strategist_engineer, 'questions_management_engineer': question_management_engineer,
                 'logged_in': True, 'name_evaluated': name_evaluated, 'category': personCategory, 'area': personArea, 'leader_person': personLeader,
                 'email': personEmail, 'name_evaluator': name_evaluator}
-        print("THE DATA")
     return render(request, 'evaluation.html', data)
