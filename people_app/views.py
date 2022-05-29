@@ -18,9 +18,9 @@ import pytz
 from evaluation_app.models import AnswerList
 import numpy as np
 # from django.views.decorators.csrf import csrf_exempt
-import tkinter as tk
+# import tkinter as tk
 
-window = tk.Tk()
+# window = tk.Tk()
 
 
 @login_required
@@ -491,9 +491,9 @@ def evaluation(request):
         for item in all_answers_evaluator:
             if item.evaluated_person == name_evaluated:
                 messages.warning(request, (f"You have already evaluated to {name_evaluated}"))
-                greeting = tk.Label(text="Hello, Tkinter")
-                greeting.pack()
-                window.mainloop()
+                # greeting = tk.Label(text="Hello, Tkinter")
+                # greeting.pack()
+                # window.mainloop()
                 return redirect('start_evaluation')
         data = {'email_evaluator': current_user, 'questions_operation': question_operation, 'questions_strategist': question_strategist,
                 'questions_management': question_management, 'questions_operation_engineer': question_operation_engineer,
