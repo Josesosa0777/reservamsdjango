@@ -7,6 +7,18 @@
         <h1> {{contact_text}} </h1>   
     </div> {% endcomment %}
     <div class="container mt-5">     {% comment %} {{ user.email }} {% endcomment %}
+
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-info alert-dismissible fade show mt-5 text-center" role="alert">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>  
+          </div>
+      {% endfor %}
+    {% endif %}
+    
     {% if name_evaluator %}
       <h4 class="questions-title">Hola {{name_evaluator}}. Las siguientes preguntas están divididas en categorías que ayudan a evaluar el
         performance del equipo de Reservamos. </h4>
